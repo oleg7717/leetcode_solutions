@@ -8,8 +8,6 @@ public class MedianFinder {
 	private PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 	//Для половины элементов от макисмального (корневой элемент) в сторону уменьшения
 	private PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
-	private int minSize = 0;
-	private int maxSize = 0;
 
 	public MedianFinder() {
 	}
@@ -17,29 +15,22 @@ public class MedianFinder {
 	public void addNum(int num) {
 		if (!maxHeap.isEmpty() && num > maxHeap.peek()) {
 			minHeap.add(num);
-			minSize++;
-			if (minSize > maxSize + 1) {
+			if (minHeap.size() > maxHeap.size() + 1) {
 				maxHeap.add(minHeap.poll());
-				minSize--;
-				maxSize++;
 			}
 		} else {
 			maxHeap.add(num);
-			maxSize++;
-			if (maxSize > minSize + 1) {
+			if (maxHeap.size() > minHeap.size() + 1) {
 				minHeap.add(maxHeap.poll());
-				maxSize--;
-				minSize++;
 			}
 		}
 	}
 
 	public double findMedian() {
-		boolean even = (minSize + maxSize) % 2 == 0;
-		if (even) {
+		if (minHeap.size() == maxHeap.size()) {
 			return (minHeap.peek() + maxHeap.peek()) / 2.0;
 		} else {
-			if (minSize > maxSize) return minHeap.peek();
+			if (minHeap.size() > maxHeap.size()) return minHeap.peek();
 			else return maxHeap.peek();
 		}
 	}
